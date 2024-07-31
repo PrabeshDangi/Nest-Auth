@@ -7,12 +7,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return super.canActivate(context);
     }
 
-    handleRequest(err: any, user: any, info: any) {
-        if (err || !user) {
-          throw new UnauthorizedException('You must be logged in to create a blog');
-        }
-        return user;
-      }
+    // handleRequest(err: any, user: any, info: any) {
+    //     if (err || !user) {
+    //       throw new UnauthorizedException('You must be logged in to create a blog');
+    //     }
+    //     return user;
+    //   }
   
     getRequest(context: ExecutionContext) {
       const request = context.switchToHttp().getRequest();

@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/createBlog.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { updateBlogDto } from './dto/updateBlog.dto';
 
 
 
@@ -25,6 +26,20 @@ export class BlogController {
   createBlog(@Body() createblogdto:CreateBlogDto,@Req() req,@Res() res){
     const user=req.user
     return this.blogService.createBlog(createblogdto,user,res)
+  }
+  
+  @UseGuards(JwtAuthGuard)
+  @Post('update/:id')
+ async updateBlog(
+    @Param('id') id:number,
+    @Body() updateblogdto:updateBlogDto,
+    @Res() res,
+    @Req() req
+  ){
+    
+    const user=req.user;
+    return this.blogService.updateBlog(updateblogdto,user,res)
+
   }
 
 }

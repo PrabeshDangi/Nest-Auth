@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { Request,Response } from 'express';
 import { CreateBlogDto } from './dto/createBlog.dto';
+import { updateBlogDto } from './dto/updateBlog.dto';
 
 @Injectable()
 export class BlogService {
@@ -70,5 +71,38 @@ export class BlogService {
             message:"New Blog added!!",
             blog:newBlog
         })
+    }
+
+    async updateBlog(updateblogdto:updateBlogDto,user:{id:number},res:Response){
+        const {title, description}= updateblogdto;
+        const blogAvailable=await this.prisma.blog.findUnique({
+            where:{
+                id:user.id
+            }
+        })
+
+        if(!blogAvailable){
+            throw new ForbiddenException('Blog not found');
+        }
+
+        if(blogAvailable.userId!== user.id){
+            throw new ForbiddenException('You are not authorized to update this blog');
+        }
+
+        const updatedBlog=await this.prisma.blog.update({
+            where:{
+                id:blogAvailable.id
+            },
+            data:{
+                title,
+                description
+            }
+        })
+
+        return res.status(200).json({
+            message:"Blog updated successfully!!",
+            data:updatedBlog
+        })
+
     }
 }
