@@ -1,6 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,29 +12,15 @@ export class AuthController {
     return this.authService.register(registerdto)
   }
 
-  // @Post('register')
-  // async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
-  //   try {
-  //     const result = await this.authService.register(registerDto);
-  //     res.status(HttpStatus.CREATED).json({
-  //       message: result.message,
-  //       user: result.user,
-  //     });
-  //   } catch (error) {
-  //     res.status(HttpStatus.BAD_REQUEST).json({
-  //       statusCode: HttpStatus.BAD_REQUEST,
-  //       message: error.message,
-  //     });
-  //   }
-  // }
+  
 
   @Post('login')
-  login(){
-    return this.authService.login()
-  }
+  login(@Body() logindto:LoginDto,@Req() req, @Res() res){
+    return this.authService.login(logindto,req,res)
+  } 
 
-  @Post('logout')
-  logout(){
-    return this.authService.logout()
+  @Get('logout')
+  logout(@Req() req, @Res() res){
+    return this.authService.logout(req,res)
   }
 }

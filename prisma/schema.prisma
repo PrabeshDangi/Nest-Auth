@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
+model User {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
@@ -21,6 +21,7 @@ model user {
   role      Role?    @default(EMPLOYEE)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  blogs Blog[]
 }
 
 enum Role {
@@ -28,4 +29,15 @@ enum Role {
   ADMIN
   INTERN
   EMPLOYEE
+}
+
+model Blog{
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId Int
+  user User @relation(fields: [userId],references: [id])
+
 }
